@@ -5,9 +5,11 @@ import { getDatabaseConnectionToken } from '../common/database.providers';
 import { DatabaseModule } from '../common/database.module';
 import { NotificationController } from './application/notification.controller';
 import { NotificationService } from './application/notification.service';
+import { IdentityModule } from '../identity/identity.module';
+import { IdentityRemoteService } from './infra/remote-service/identity.remote-service';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, IdentityModule],
   controllers: [NotificationController],
   providers: [
     {
@@ -18,6 +20,7 @@ import { NotificationService } from './application/notification.service';
       inject: [getDatabaseConnectionToken()],
     },
     NotificationService,
+    IdentityRemoteService,
   ],
 })
 export class NotificationModule {}
