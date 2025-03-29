@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { Connection } from 'mongoose';
-import { NotificationSchema } from './notification.model';
+import { NotificationSchema } from './infra/notification.model';
 import { getDatabaseConnectionToken } from '../common/database.providers';
 import { DatabaseModule } from '../common/database.module';
-import { NotificationController } from './notification.controller';
+import { NotificationController } from './application/notification.controller';
+import { NotificationService } from './application/notification.service';
+
 @Module({
   imports: [DatabaseModule],
   controllers: [NotificationController],
@@ -15,6 +17,7 @@ import { NotificationController } from './notification.controller';
       },
       inject: [getDatabaseConnectionToken()],
     },
+    NotificationService,
   ],
 })
 export class NotificationModule {}
