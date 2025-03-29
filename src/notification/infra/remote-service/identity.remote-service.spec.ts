@@ -81,5 +81,15 @@ describe('IdentityRemoteService', () => {
       });
       expect(result).toBeNull();
     });
+
+    it('should throw an error if the user is not found', async () => {
+      (mockIdentityService.getUser as jest.Mock).mockRejectedValue(
+        new Error('whatever error'),
+      );
+
+      await expect(
+        remoteService.getUser({ userId: '1', companyId: '1' }),
+      ).rejects.toThrow(IdentityRemoteService.UnknownError);
+    });
   });
 });
