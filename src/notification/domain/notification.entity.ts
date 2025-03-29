@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { NotificationChannelType, NotificationType } from './types';
 
 class UnsupportedNotificationTypeException extends Error {
@@ -12,6 +13,8 @@ type NotificationProps = {
   data: Record<string, any>;
 };
 
+type NotificationCreateProps = Omit<NotificationProps, 'id'>;
+
 export class Notification {
   static readonly UnsupportedNotificationTypeException =
     UnsupportedNotificationTypeException;
@@ -24,6 +27,10 @@ export class Notification {
     this.id = props.id;
     this.type = props.type;
     this.data = props.data;
+  }
+
+  static create(props: NotificationCreateProps): Notification {
+    return new Notification({ id: uuidv4(), ...props });
   }
 
   getChannels(): NotificationChannelType[] {

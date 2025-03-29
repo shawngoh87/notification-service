@@ -20,6 +20,25 @@ describe('Notification', () => {
     });
   });
 
+  describe('create', () => {
+    it('should create a notification', () => {
+      const notification = Notification.create({
+        type: NotificationType.LeaveBalanceReminder,
+        data: {
+          some: 'data',
+          another: 'data',
+        },
+      });
+
+      expect(notification.id).toBeDefined();
+      expect(notification.type).toBe(NotificationType.LeaveBalanceReminder);
+      expect(notification.data).toEqual({
+        some: 'data',
+        another: 'data',
+      });
+    });
+  });
+
   describe('getChannels', () => {
     it('should get channels for a leave balance reminder notification', () => {
       const notification = new Notification({
