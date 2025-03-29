@@ -14,3 +14,7 @@ export const NotificationChannelType = {
 
 export type NotificationChannelType =
   (typeof NotificationChannelType)[keyof typeof NotificationChannelType];
+
+export type ChannelSubscription = {
+  [key in NotificationChannelType]: boolean;
+};
