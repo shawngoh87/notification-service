@@ -7,10 +7,10 @@ export const NotificationType = {
 export type NotificationType =
   (typeof NotificationType)[keyof typeof NotificationType];
 
-export const NotificationChannel = {
+export const NotificationChannelType = {
   Email: 'email',
   UI: 'ui',
 } as const;
 
-export type NotificationChannel =
-  (typeof NotificationChannel)[keyof typeof NotificationChannel];
+export type NotificationChannelType =
+  (typeof NotificationChannelType)[keyof typeof NotificationChannelType];
