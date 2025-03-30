@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { NotificationType } from '../domain/types';
+import { NotificationType, NotificationChannelType } from '../domain/types';
 import { IdentityRemoteService } from '../infra/remote-service/identity.remote-service';
 import { NotificationTemplateRegistry } from './notification-template/notification-template.registry';
 import { NotificationChannelRegistry } from './notification-channel/notification-channel.registry';
 
 type SendNotificationResult = {
   sent: boolean;
-  skipReason: 'user_not_found' | 'unsubscribed' | null;
+  skipReason: 'user_not_found' | null;
 };
 
 @Injectable()
@@ -40,6 +40,10 @@ export class NotificationService {
     );
 
     const supportedChannels = template.getSupportedChannels();
+    const dataToSend: {
+      channel: NotificationChannelType;
+      content: any;
+    }[] = [];
 
     for (const channel of supportedChannels) {
       if (user.isSubscribedToChannel(channel)) {
@@ -47,9 +51,17 @@ export class NotificationService {
           userName: user.name,
           companyName: user.company.name,
         });
-        // TODO: batch send after content is ready
-        await this.channelRegistry.getByChannelType(channel).send(content);
+        dataToSend.push({
+          channel,
+          content,
+        });
       }
+    }
+
+    for (const data of dataToSend) {
+      await this.channelRegistry
+        .getByChannelType(data.channel)
+        .send(data.content);
     }
 
     return {
