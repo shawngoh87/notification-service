@@ -17,6 +17,7 @@ import { LeaveBalanceReminderNotificationTemplate } from './application/notifica
 import { UINotificationRepository } from './infra/repository/ui-notification.repository';
 import { UINotificationChannel } from './application/notification-channel/ui';
 import { EmailNotificationChannel } from './application/notification-channel/email';
+import { MonthlyPayslipNotificationTemplate } from './application/notification-template/monthly-payslip';
 
 @Module({
   imports: [DatabaseModule, IdentityModule],
@@ -56,6 +57,11 @@ import { EmailNotificationChannel } from './application/notification-channel/ema
         registry.register(
           NotificationType.LeaveBalanceReminder,
           new LeaveBalanceReminderNotificationTemplate(),
+        );
+
+        registry.register(
+          NotificationType.MonthlyPayslip,
+          new MonthlyPayslipNotificationTemplate(),
         );
 
         return registry;
