@@ -4,15 +4,17 @@ This service owns all aspects of notification, including the template content, s
 
 Service callers can send the predefined notification types by calling `/api/notification/send` and list all UI notifications by calling `/api/notification/list-ui-notifications`.
 
-API docs (TODO) [here](WIP).
-
-Guides on adding new channels and new notification types [here](#guides).
-
 Types of notification:
 
 1. Remind a user of their leave balance
 2. Notify a user that the monthly payslip is ready
 3. Wish a user happy birthday
+
+Swagger docs available under `http://host:port/docs`.
+
+Guides on adding new channels and new notification types [here](#guides).
+
+Fake company/user data is defined [here](src/identity/identity.service.ts).
 
 ## Setup
 
