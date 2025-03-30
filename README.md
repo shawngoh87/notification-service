@@ -177,4 +177,7 @@ Shawn
 
 ## Improvements
 
-TODO
+- Add authentication instead of relying on companyId/userId for `/list-ui-notifications`
+- Add pagination for `/list-ui-notifications`
+- Persist all notifications for idempotency
+- Add more exceptions and improve exception handling
