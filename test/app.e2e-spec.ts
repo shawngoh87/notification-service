@@ -65,8 +65,8 @@ describe('AppController (e2e)', () => {
   });
 
   describe('sending different types of notifications', () => {
-    it('should send a leave balance reminder notification', () => {
-      return request(app.getHttpServer())
+    it('should send a leave balance reminder notification', async () => {
+      await request(app.getHttpServer())
         .post('/api/notification/send')
         .send({
           companyId: '1',
@@ -74,6 +74,17 @@ describe('AppController (e2e)', () => {
           notificationType: NotificationType.LeaveBalanceReminder,
         })
         .expect(201);
+
+      const uiNotifications = await connection.db
+        ?.collection('ui_notifications')
+        .find({})
+        .toArray();
+
+      expect(uiNotifications).toHaveLength(1);
+      expect(uiNotifications?.[0].id).toEqual(expect.any(String));
+      expect(uiNotifications?.[0].content).toEqual(
+        'Remember to book your leaves, John Doe',
+      );
     });
 
     it('should send a monthly payslip notification', async () => {
@@ -112,6 +123,17 @@ describe('AppController (e2e)', () => {
       );
       expect(consoleSpy).toHaveBeenCalledWith(
         'Content',
+        'Acme Corp wishes you a happy birthday, John Doe!',
+      );
+
+      const uiNotifications = await connection.db
+        ?.collection('ui_notifications')
+        .find({})
+        .toArray();
+
+      expect(uiNotifications).toHaveLength(1);
+      expect(uiNotifications?.[0].id).toEqual(expect.any(String));
+      expect(uiNotifications?.[0].content).toEqual(
         'Acme Corp wishes you a happy birthday, John Doe!',
       );
     });
