@@ -2,7 +2,11 @@
 
 This service owns all aspects of notification, including the template content, storage, and delivery.
 
-Service callers can send the predefined notification types by calling `/api/notification/send` and list all UI notifications by calling `/api/notification/list-ui-notifications`. API docs (TODO) [here](WIP).
+Service callers can send the predefined notification types by calling `/api/notification/send` and list all UI notifications by calling `/api/notification/list-ui-notifications`.
+
+API docs (TODO) [here](WIP).
+
+Guides on adding new channels and new notification types [here](#guides).
 
 Types of notification:
 
@@ -58,11 +62,109 @@ docker compose up -d
 
 ### Adding a new channel
 
-TODO
+Step 1: Add your new channel type in `NotificationChannelType` [here](src/notification/domain/types.ts)
+
+```ts
+export const NotificationChannelType = {
+  // ...other types
+  MyNewChannelType: 'new-type',
+} as const;
+```
+
+Step 2: Build your channel class that implements the `NotificationChannel` [interface](src/notification/application/notification-channel/notification-channel.interface.ts)
+
+```ts
+export class MyNewChannel implements NotificationChannel {
+  async send(params: { companyId: string; userId: string; data: YourDTO }) {
+    // Do something
+  }
+}
+```
+
+Step 3: Register your channel in `NotificationModule` under `NotificationChannelRegistry` [here](src/notification/notification.module.ts)
+
+```ts
+
+@Module({
+  providers: [
+    // ...other providers
+    {
+      provide: NotificationChannelRegistry,
+      useFactory: (dependency: Dependency) => {
+      const registry = new NotificationChannelRegistry();
+
+      // ...other channels
+
+      // Declare and inject your dependencies here
+      registry.register(MyNewChannel.Email, new MyNewChannel(dependency));
+
+      return registry;
+      },
+      inject: [Dependency],
+    },
+  ];
+})
+```
 
 ### Adding a new template
 
-TODO
+Step 1: Add your new template type in `NotificationType` [here](src/notification/domain/types.ts)
+
+```ts
+export const NotificationType = {
+  // ...other types
+  MyNewNotificationType: 'new-type',
+} as const;
+```
+
+Step 2: Build your template class that implements the `NotificationTemplate` [interface](src/notification/application/notification-template/notification-template.interface.ts)
+
+```ts
+export class MyNewNotificationTemplate implements NotificationTemplate {
+  getSupportedChannels(): NotificationChannelType[] {
+    return [
+      // List of all the channel types you want to support
+    ];
+  }
+
+  getContent(channel: NotificationChannelType, params: Record<string, any>) {
+    switch (channel) {
+      case NotificationChannelType.UI:
+        // Return the payload required for the channel to work
+        return {
+          content: 'some content',
+        };
+      default:
+        throw new Error('unsupported');
+    }
+  }
+}
+```
+
+Step 3: Register your template in `NotificationModule` under `NotificationTemplateRegistry` [here](src/notification/notification.module.ts)
+
+```ts
+@Module({
+  providers: [
+    // ...other providers
+    {
+      provide: NotificationTemplateRegistry,
+      useFactory: () => {
+        const registry = new NotificationTemplateRegistry();
+
+        // ...other templates
+
+        registry.register(
+          NotificationType.MyNew,
+          new HappyBirthdayNotificationTemplate(),
+        );
+
+        return registry;
+      },
+    }
+  ];
+})
+```
 
 ## Author
 
