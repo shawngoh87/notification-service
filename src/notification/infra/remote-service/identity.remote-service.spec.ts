@@ -49,7 +49,7 @@ describe('IdentityRemoteService', () => {
         userId: '1',
         companyId: '1',
       });
-      expect(result).toMatchObject({
+      expect(result?.toPlainObject()).toMatchObject({
         id: '1',
         name: 'John Doe',
         company: {

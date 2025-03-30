@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { IdentityService } from '../../../identity/identity.service';
-import { User } from '../../domain/user.entity';
+import { User } from '../../domain/entity/user.entity';
 
 class UnknownError extends Error {
   constructor(message: string) {
@@ -20,7 +20,11 @@ export class IdentityRemoteService {
     companyId: string;
   }): Promise<User | null> {
     try {
-      // Fake remote service - should be replaced with a http call
+      /**
+       * Fake remote service.
+       * In real world, it would probably be a http/rpc call
+       * instead of identityService.getUser().
+       */
       const userFromIdentityService =
         await this.identityService.getUser(params);
 
@@ -40,7 +44,10 @@ export class IdentityRemoteService {
         channelSubscription: userFromIdentityService.channelSubscription,
       });
     } catch {
-      throw new UnknownError('Failed to get user from identity service');
+      // TODO: Get infra exceptions from common package
+      throw new IdentityRemoteService.UnknownError(
+        'Failed to get user from identity service',
+      );
     }
   }
 }
