@@ -1,8 +1,8 @@
 ## Notification Service
 
-This service owns all aspects of notification, including the template content, storage, and delivery.
+This service owns all aspects of notification, including the template content, storage, and delivery via supported channels.
 
-Service callers can send the predefined notification types by calling `/api/notification/send` and list all UI notifications by calling `/api/notification/list-ui-notifications`.
+Service callers can send predefined notification types by calling `/api/notification/send` and list all UI notifications by calling `/api/notification/list-ui-notifications`.
 
 Types of notification:
 
