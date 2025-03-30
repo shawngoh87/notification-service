@@ -46,8 +46,8 @@ export class NotificationController {
     };
   }
 
-  @Get('list-ui-notification')
-  async listUiNotification(
+  @Get('list-ui-notifications')
+  async listUiNotifications(
     @Query() query: ListUiNotificationQuery,
   ): Promise<UINotification[]> {
     const result = await this.notificationService.listUiNotifications({

@@ -159,7 +159,7 @@ describe('AppController (e2e)', () => {
       ]);
 
       const response = await request(app.getHttpServer())
-        .get('/api/notification/list-ui-notification')
+        .get('/api/notification/list-ui-notifications')
         .query({
           companyId: '1',
           userId: '1',

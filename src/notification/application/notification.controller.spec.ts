@@ -158,10 +158,10 @@ describe('NotificationController', () => {
     });
   });
 
-  describe('GET /notification/list-ui-notification', () => {
+  describe('GET /notification/list-ui-notifications', () => {
     it('success', async () => {
       const response = await request(server)
-        .get('/notification/list-ui-notification')
+        .get('/notification/list-ui-notifications')
         .query({ companyId: '123', userId: '456' })
         .expect(200);
 
@@ -186,14 +186,14 @@ describe('NotificationController', () => {
       describe('companyId', () => {
         it('should invalidate missing companyId', async () => {
           await request(server)
-            .get('/notification/list-ui-notification')
+            .get('/notification/list-ui-notifications')
             .query({ userId: '456' })
             .expect(400);
         });
 
         it('should invalidate empty companyId', async () => {
           await request(server)
-            .get('/notification/list-ui-notification')
+            .get('/notification/list-ui-notifications')
             .query({ companyId: '', userId: '456' })
             .expect(400);
         });
@@ -202,14 +202,14 @@ describe('NotificationController', () => {
       describe('userId', () => {
         it('should invalidate missing userId', async () => {
           await request(server)
-            .get('/notification/list-ui-notification')
+            .get('/notification/list-ui-notifications')
             .query({ companyId: '123' })
             .expect(400);
         });
 
         it('should invalidate empty userId', async () => {
           await request(server)
-            .get('/notification/list-ui-notification')
+            .get('/notification/list-ui-notifications')
             .query({ companyId: '123', userId: '' })
             .expect(400);
         });
