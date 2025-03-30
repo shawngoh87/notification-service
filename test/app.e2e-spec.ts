@@ -12,6 +12,7 @@ describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
   let consoleSpy: jest.SpyInstance;
   let connection: Connection;
+  let db: Connection['db'];
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -29,15 +30,19 @@ describe('AppController (e2e)', () => {
     await app.init();
 
     connection = app.get(getDatabaseConnectionToken());
+    if (!connection.db) {
+      throw new Error('Database connection not found');
+    }
+
+    db = connection.db;
   });
 
   beforeEach(async () => {
     // Drop all collections before each test
-    if (connection?.db) {
-      const collections = await connection.db.collections();
+    if (db) {
+      const collections = await db.collections();
 
       for (const collection of collections) {
-        console.log(`Dropping collection: ${collection.collectionName}`);
         await collection.drop().catch((err) => {
           console.error(
             `Error dropping collection ${collection.collectionName}:`,
@@ -46,7 +51,7 @@ describe('AppController (e2e)', () => {
         });
       }
     } else {
-      console.log('No database connection available for cleanup');
+      console.error('No database connection available for cleanup');
     }
 
     consoleSpy = jest.spyOn(console, 'log');
@@ -57,11 +62,8 @@ describe('AppController (e2e)', () => {
   });
 
   afterAll(async () => {
-    // Close the database connection
-    console.log('Disconnecting from database...');
     await disconnect();
     await app.close();
-    console.log('Cleanup completed');
   });
 
   describe('sending different types of notifications', () => {
@@ -75,15 +77,18 @@ describe('AppController (e2e)', () => {
         })
         .expect(201);
 
-      const uiNotifications = await connection.db
+      const uiNotifications = await db
         ?.collection('ui_notifications')
         .find({})
         .toArray();
 
       expect(uiNotifications).toHaveLength(1);
-      expect(uiNotifications?.[0].id).toEqual(expect.any(String));
-      expect(uiNotifications?.[0].content).toEqual(
-        'Remember to book your leaves, John Doe',
+      expect(uiNotifications?.[0]).toEqual(
+        expect.objectContaining({
+          companyId: '1',
+          userId: '1',
+          content: 'Remember to book your leaves, John Doe',
+        }),
       );
     });
 
@@ -132,9 +137,41 @@ describe('AppController (e2e)', () => {
         .toArray();
 
       expect(uiNotifications).toHaveLength(1);
-      expect(uiNotifications?.[0].id).toEqual(expect.any(String));
       expect(uiNotifications?.[0].content).toEqual(
         'Acme Corp wishes you a happy birthday, John Doe!',
+      );
+    });
+  });
+
+  describe('listing ui notifications', () => {
+    it('should list ui notifications', async () => {
+      await db?.collection('ui_notifications').insertMany([
+        {
+          content: 'Test',
+          companyId: '1',
+          userId: '1',
+        },
+        {
+          content: 'Test 2',
+          companyId: '1',
+          userId: '1',
+        },
+      ]);
+
+      const response = await request(app.getHttpServer())
+        .get('/api/notification/list-ui-notification')
+        .query({
+          companyId: '1',
+          userId: '1',
+        })
+        .expect(200);
+
+      expect(response.body).toHaveLength(2);
+      expect(response.body).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ content: 'Test' }),
+          expect.objectContaining({ content: 'Test 2' }),
+        ]),
       );
     });
   });

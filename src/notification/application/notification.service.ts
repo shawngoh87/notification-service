@@ -53,7 +53,7 @@ export class NotificationService {
     const supportedChannels = template.getSupportedChannels();
     const dataToSend: {
       channel: NotificationChannelType;
-      content: any;
+      content: unknown;
     }[] = [];
 
     for (const channel of supportedChannels) {
@@ -70,9 +70,11 @@ export class NotificationService {
     }
 
     for (const data of dataToSend) {
-      await this.channelRegistry
-        .getByChannelType(data.channel)
-        .send(data.content);
+      await this.channelRegistry.getByChannelType(data.channel).send({
+        companyId: params.companyId,
+        userId: params.userId,
+        data: data.content,
+      });
     }
 
     return {
@@ -96,7 +98,7 @@ export class NotificationService {
       );
     }
 
-    const uiNotifications = await this.uiNotificationRepository.findByUserId({
+    const uiNotifications = await this.uiNotificationRepository.listByUserId({
       companyId: params.companyId,
       userId: params.userId,
     });

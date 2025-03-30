@@ -7,12 +7,14 @@ type EmailNotificationDTO = {
 };
 
 @Injectable()
-export class EmailNotificationChannel
-  implements NotificationChannel<EmailNotificationDTO>
-{
-  async send(data: EmailNotificationDTO) {
-    console.log('Subject', data.subject);
-    console.log('Content', data.content);
+export class EmailNotificationChannel implements NotificationChannel {
+  async send(params: {
+    companyId: string;
+    userId: string;
+    data: EmailNotificationDTO;
+  }) {
+    console.log('Subject', params.data.subject);
+    console.log('Content', params.data.content);
     await Promise.resolve();
   }
 }

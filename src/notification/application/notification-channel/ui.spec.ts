@@ -29,7 +29,9 @@ describe('UINotificationChannel', () => {
       await channel.send({
         companyId: '1',
         userId: '1',
-        content: 'Test',
+        data: {
+          content: 'Test',
+        },
       });
 
       expect(mockedUINotificationRepository.create).toHaveBeenCalledWith(

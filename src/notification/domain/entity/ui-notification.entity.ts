@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import { ObjectId } from 'bson';
 
 export class UINotification {
   private id: string;
@@ -24,7 +24,7 @@ export class UINotification {
     userId: string;
   }): UINotification {
     return new UINotification({
-      id: uuidv4(),
+      id: new ObjectId().toHexString(),
       content: props.content,
       companyId: props.companyId,
       userId: props.userId,

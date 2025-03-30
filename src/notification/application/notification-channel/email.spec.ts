@@ -17,8 +17,12 @@ describe('EmailNotificationChannel', () => {
   describe('send', () => {
     it('should send a notification', async () => {
       await channel.send({
-        subject: 'Test',
-        content: 'Test',
+        companyId: '1',
+        userId: '1',
+        data: {
+          subject: 'Test',
+          content: 'Test',
+        },
       });
 
       expect(console.log).toHaveBeenCalledWith('Subject', 'Test');

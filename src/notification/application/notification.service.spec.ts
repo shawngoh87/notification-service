@@ -22,7 +22,7 @@ describe('NotificationService', () => {
         {
           provide: UINotificationRepository,
           useValue: {
-            findByUserId: jest.fn(),
+            listByUserId: jest.fn(),
           },
         },
         {
@@ -122,7 +122,7 @@ describe('NotificationService', () => {
         companyId: '1',
         userId: '1',
       });
-      mockedUINotificationRepository.findByUserId.mockResolvedValue([
+      mockedUINotificationRepository.listByUserId.mockResolvedValue([
         uiNotification,
       ]);
 
@@ -133,7 +133,7 @@ describe('NotificationService', () => {
 
       expect(result).toEqual([uiNotification]);
 
-      expect(mockedUINotificationRepository.findByUserId).toHaveBeenCalledWith({
+      expect(mockedUINotificationRepository.listByUserId).toHaveBeenCalledWith({
         companyId: '1',
         userId: '1',
       });
