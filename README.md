@@ -50,7 +50,9 @@ npm run test:e2e        # E2E tests
 
 ## Production
 
-TODO
+```bash
+docker compose up -d
+```
 
 ## Guides
 

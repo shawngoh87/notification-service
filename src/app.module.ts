@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { NotificationModule } from './notification/notification.module';
 import { ConfigModule } from '@nestjs/config';
 import { existsSync } from 'fs';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -13,5 +14,6 @@ import { existsSync } from 'fs';
       isGlobal: true,
     }),
   ],
+  controllers: [AppController],
 })
 export class AppModule {}
