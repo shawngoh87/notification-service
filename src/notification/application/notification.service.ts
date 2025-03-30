@@ -3,6 +3,7 @@ import { NotificationType, NotificationChannelType } from '../domain/types';
 import { IdentityRemoteService } from '../infra/remote-service/identity.remote-service';
 import { NotificationTemplateRegistry } from './notification-template/notification-template.registry';
 import { NotificationChannelRegistry } from './notification-channel/notification-channel.registry';
+import { UINotification } from '../domain/entity/ui-notification.entity';
 
 type SendNotificationResult = {
   sent: boolean;
@@ -68,5 +69,12 @@ export class NotificationService {
       sent: true,
       skipReason: null,
     };
+  }
+
+  async listUiNotifications(params: {
+    companyId: string;
+    userId: string;
+  }): Promise<UINotification[]> {
+    return await Promise.resolve([]);
   }
 }

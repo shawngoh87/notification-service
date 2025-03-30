@@ -18,6 +18,16 @@ describe('NotificationController', () => {
         sent: true,
         skipReason: null,
       }),
+      listUiNotifications: jest.fn().mockResolvedValue([
+        {
+          id: '1',
+          content: 'content',
+        },
+        {
+          id: '2',
+          content: 'content',
+        },
+      ]),
     };
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -143,6 +153,65 @@ describe('NotificationController', () => {
           // @ts-expect-error
           body.notificationType = 'invalid';
           await expect400(body);
+        });
+      });
+    });
+  });
+
+  describe('GET /notification/list-ui-notification', () => {
+    it('success', async () => {
+      const response = await request(server)
+        .get('/notification/list-ui-notification')
+        .query({ companyId: '123', userId: '456' })
+        .expect(200);
+
+      expect(response.body).toEqual([
+        {
+          id: '1',
+          content: 'content',
+        },
+        {
+          id: '2',
+          content: 'content',
+        },
+      ]);
+
+      expect(notificationService.listUiNotifications).toHaveBeenCalledWith({
+        companyId: '123',
+        userId: '456',
+      });
+    });
+
+    describe('validation', () => {
+      describe('companyId', () => {
+        it('should invalidate missing companyId', async () => {
+          await request(server)
+            .get('/notification/list-ui-notification')
+            .query({ userId: '456' })
+            .expect(400);
+        });
+
+        it('should invalidate empty companyId', async () => {
+          await request(server)
+            .get('/notification/list-ui-notification')
+            .query({ companyId: '', userId: '456' })
+            .expect(400);
+        });
+      });
+
+      describe('userId', () => {
+        it('should invalidate missing userId', async () => {
+          await request(server)
+            .get('/notification/list-ui-notification')
+            .query({ companyId: '123' })
+            .expect(400);
+        });
+
+        it('should invalidate empty userId', async () => {
+          await request(server)
+            .get('/notification/list-ui-notification')
+            .query({ companyId: '123', userId: '' })
+            .expect(400);
         });
       });
     });

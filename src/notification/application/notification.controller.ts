@@ -1,7 +1,8 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { NotificationService } from './notification.service';
 import { NotificationType } from '../domain/types';
 import { IsNotEmpty, IsEnum, IsString } from 'class-validator';
+import { UINotification } from '../domain/entity/ui-notification.entity';
 
 class SendNotificationRequestBody {
   @IsNotEmpty()
@@ -15,6 +16,16 @@ class SendNotificationRequestBody {
   @IsNotEmpty()
   @IsEnum(NotificationType)
   notificationType!: NotificationType;
+}
+
+class ListUiNotificationQuery {
+  @IsNotEmpty()
+  @IsString()
+  companyId!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  userId!: string;
 }
 
 @Controller('notification')
@@ -33,5 +44,17 @@ export class NotificationController {
       sent: result.sent,
       skipReason: result.skipReason,
     };
+  }
+
+  @Get('list-ui-notification')
+  async listUiNotification(
+    @Query() query: ListUiNotificationQuery,
+  ): Promise<UINotification[]> {
+    const result = await this.notificationService.listUiNotifications({
+      companyId: query.companyId,
+      userId: query.userId,
+    });
+
+    return result;
   }
 }
