@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { NotificationType } from '../domain/types';
-import { NotificationTemplate } from '../domain/template.interface';
+import { NotificationTemplate } from './notification-template/notification-template.interface';
 
 class TemplateNotFoundException extends Error {
   constructor(notificationType: NotificationType) {
@@ -9,7 +9,7 @@ class TemplateNotFoundException extends Error {
 }
 
 @Injectable()
-export class TemplateRegistry {
+export class NotificationTemplateRegistry {
   static readonly TemplateNotFoundException = TemplateNotFoundException;
 
   private templates: Map<NotificationType, NotificationTemplate> = new Map();
@@ -24,7 +24,9 @@ export class TemplateRegistry {
     const template = this.templates.get(notificationType);
 
     if (!template) {
-      throw new TemplateRegistry.TemplateNotFoundException(notificationType);
+      throw new NotificationTemplateRegistry.TemplateNotFoundException(
+        notificationType,
+      );
     }
 
     return template;

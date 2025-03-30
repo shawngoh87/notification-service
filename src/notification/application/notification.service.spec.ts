@@ -3,8 +3,8 @@ import { NotificationService } from './notification.service';
 import { NotificationChannelType, NotificationType } from '../domain/types';
 import { IdentityModule } from '../../identity/identity.module';
 import { IdentityRemoteService } from '../infra/remote-service/identity.remote-service';
-import { TemplateRegistry } from './template.registry';
-import { ChannelRegistry } from './channel.registry';
+import { NotificationTemplateRegistry } from './notification-template.registry';
+import { NotificationChannelRegistry } from './notification-channel.registry';
 import { User } from '../domain/entity/user.entity';
 
 describe('NotificationService', () => {
@@ -17,9 +17,9 @@ describe('NotificationService', () => {
       providers: [
         NotificationService,
         {
-          provide: ChannelRegistry,
+          provide: NotificationChannelRegistry,
           useFactory: () => {
-            const registry = new ChannelRegistry();
+            const registry = new NotificationChannelRegistry();
             registry.register(NotificationChannelType.UI, {
               send: jest.fn().mockResolvedValue(true),
             });
@@ -27,9 +27,9 @@ describe('NotificationService', () => {
           },
         },
         {
-          provide: TemplateRegistry,
+          provide: NotificationTemplateRegistry,
           useFactory: () => {
-            const registry = new TemplateRegistry();
+            const registry = new NotificationTemplateRegistry();
             registry.register(NotificationType.LeaveBalanceReminder, {
               getSupportedChannels: jest
                 .fn()

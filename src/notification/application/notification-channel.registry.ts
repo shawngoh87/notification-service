@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { NotificationChannelType } from '../domain/types';
-import { NotificationChannel } from './channel/notification-channel.interface';
+import { NotificationChannel } from './notification-channel/notification-channel.interface';
 
 class ChannelNotFoundException extends Error {
   constructor(channelType: NotificationChannelType) {
@@ -9,7 +9,7 @@ class ChannelNotFoundException extends Error {
 }
 
 @Injectable()
-export class ChannelRegistry {
+export class NotificationChannelRegistry {
   static readonly ChannelNotFoundException = ChannelNotFoundException;
 
   private channels: Map<NotificationChannelType, NotificationChannel> =
@@ -23,7 +23,9 @@ export class ChannelRegistry {
     const channel = this.channels.get(channelType);
 
     if (!channel) {
-      throw new ChannelRegistry.ChannelNotFoundException(channelType);
+      throw new NotificationChannelRegistry.ChannelNotFoundException(
+        channelType,
+      );
     }
 
     return channel;

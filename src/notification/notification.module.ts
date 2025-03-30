@@ -10,12 +10,13 @@ import { NotificationController } from './application/notification.controller';
 import { NotificationService } from './application/notification.service';
 import { IdentityModule } from '../identity/identity.module';
 import { IdentityRemoteService } from './infra/remote-service/identity.remote-service';
-import { ChannelRegistry } from './application/channel.registry';
-import { TemplateRegistry } from './application/template.registry';
+import { NotificationChannelRegistry } from './application/notification-channel.registry';
+import { NotificationTemplateRegistry } from './application/notification-template.registry';
 import { NotificationType, NotificationChannelType } from './domain/types';
-import { LeaveBalanceReminderTemplate } from './domain/leave-balance-reminder-template';
+import { LeaveBalanceReminderNotificationTemplate } from './application/notification-template/leave-balance-reminder';
 import { UINotificationRepository } from './infra/repository/ui-notification.repository';
-import { UINotificationChannel } from './application/channel/ui-notification-channel';
+import { UINotificationChannel } from './application/notification-channel/ui';
+import { EmailNotificationChannel } from './application/notification-channel/email';
 
 @Module({
   imports: [DatabaseModule, IdentityModule],
@@ -29,25 +30,32 @@ import { UINotificationChannel } from './application/channel/ui-notification-cha
       inject: [getDatabaseConnectionToken()],
     },
     {
-      provide: ChannelRegistry,
+      provide: NotificationChannelRegistry,
       useFactory: (repository: UINotificationRepository) => {
-        const registry = new ChannelRegistry();
+        const registry = new NotificationChannelRegistry();
+
         registry.register(
           NotificationChannelType.UI,
           new UINotificationChannel(repository),
         );
+
+        registry.register(
+          NotificationChannelType.Email,
+          new EmailNotificationChannel(),
+        );
+
         return registry;
       },
       inject: [UINotificationRepository],
     },
     {
-      provide: TemplateRegistry,
+      provide: NotificationTemplateRegistry,
       useFactory: () => {
-        const registry = new TemplateRegistry();
+        const registry = new NotificationTemplateRegistry();
 
         registry.register(
           NotificationType.LeaveBalanceReminder,
-          new LeaveBalanceReminderTemplate(),
+          new LeaveBalanceReminderNotificationTemplate(),
         );
 
         return registry;

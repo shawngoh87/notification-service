@@ -1,5 +1,5 @@
-import { NotificationTemplate } from './template.interface';
-import { NotificationChannelType } from './types';
+import { NotificationTemplate } from './notification-template.interface';
+import { NotificationChannelType } from '../../domain/types';
 
 class UnsupportedChannelException extends Error {
   constructor(channel: NotificationChannelType) {
@@ -7,7 +7,9 @@ class UnsupportedChannelException extends Error {
   }
 }
 
-export class LeaveBalanceReminderTemplate implements NotificationTemplate {
+export class LeaveBalanceReminderNotificationTemplate
+  implements NotificationTemplate
+{
   getSupportedChannels(): NotificationChannelType[] {
     return [NotificationChannelType.UI];
   }

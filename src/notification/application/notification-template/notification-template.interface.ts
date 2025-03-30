@@ -1,4 +1,7 @@
-import { NotificationChannelType, NotificationContent } from './types';
+import {
+  NotificationChannelType,
+  NotificationContent,
+} from '../../domain/types';
 
 export interface NotificationTemplate {
   getSupportedChannels(): NotificationChannelType[];

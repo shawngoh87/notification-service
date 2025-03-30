@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { NotificationType } from '../domain/types';
 import { IdentityRemoteService } from '../infra/remote-service/identity.remote-service';
-import { TemplateRegistry } from './template.registry';
-import { ChannelRegistry } from './channel.registry';
+import { NotificationTemplateRegistry } from './notification-template.registry';
+import { NotificationChannelRegistry } from './notification-channel.registry';
 
 type SendNotificationResult = {
   sent: boolean;
@@ -13,8 +13,8 @@ type SendNotificationResult = {
 export class NotificationService {
   constructor(
     private readonly identityRemoteService: IdentityRemoteService,
-    private readonly templateRegistry: TemplateRegistry,
-    private readonly channelRegistry: ChannelRegistry,
+    private readonly templateRegistry: NotificationTemplateRegistry,
+    private readonly channelRegistry: NotificationChannelRegistry,
   ) {}
 
   async sendNotification(params: {
