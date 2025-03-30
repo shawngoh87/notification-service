@@ -3,8 +3,8 @@ import { NotificationService } from './notification.service';
 import { NotificationChannelType, NotificationType } from '../domain/types';
 import { IdentityModule } from '../../identity/identity.module';
 import { IdentityRemoteService } from '../infra/remote-service/identity.remote-service';
-import { NotificationTemplateRegistry } from './notification-template.registry';
-import { NotificationChannelRegistry } from './notification-channel.registry';
+import { NotificationTemplateRegistry } from './notification-template/notification-template.registry';
+import { NotificationChannelRegistry } from './notification-channel/notification-channel.registry';
 import { User } from '../domain/entity/user.entity';
 
 describe('NotificationService', () => {

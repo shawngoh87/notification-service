@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { NotificationChannelType } from '../domain/types';
+import { NotificationChannelType } from '../../domain/types';
 import { NotificationChannelRegistry } from './notification-channel.registry';
 
 describe('NotificationChannelRegistry', () => {

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { NotificationChannelType } from '../domain/types';
-import { NotificationChannel } from './notification-channel/notification-channel.interface';
+import { NotificationChannelType } from '../../domain/types';
+import { NotificationChannel } from './notification-channel.interface';
 
 class ChannelNotFoundException extends Error {
   constructor(channelType: NotificationChannelType) {

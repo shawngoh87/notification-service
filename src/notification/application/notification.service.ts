@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { NotificationType } from '../domain/types';
 import { IdentityRemoteService } from '../infra/remote-service/identity.remote-service';
-import { NotificationTemplateRegistry } from './notification-template.registry';
-import { NotificationChannelRegistry } from './notification-channel.registry';
+import { NotificationTemplateRegistry } from './notification-template/notification-template.registry';
+import { NotificationChannelRegistry } from './notification-channel/notification-channel.registry';
 
 type SendNotificationResult = {
   sent: boolean;

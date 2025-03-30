@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { NotificationType } from '../domain/types';
+import { NotificationType } from '../../domain/types';
 import { NotificationTemplateRegistry } from './notification-template.registry';
 
 describe('NotificationTemplateRegistry', () => {

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { NotificationType } from '../domain/types';
-import { NotificationTemplate } from './notification-template/notification-template.interface';
+import { NotificationType } from '../../domain/types';
+import { NotificationTemplate } from './notification-template.interface';
 
 class TemplateNotFoundException extends Error {
   constructor(notificationType: NotificationType) {
