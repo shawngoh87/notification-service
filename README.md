@@ -12,7 +12,7 @@ Types of notification:
 
 ## Important resources
 
-Swagger docs available under `http://host:port/docs` and at the [root](swagger.json) of the repository. Drop `swagger.json` into Postman to import the collection.
+Swagger docs is available under `http://host:port/docs` and `swagger.json` is available at the [root](swagger.json) of the repository. Drop `swagger.json` into Postman to import the collection.
 
 Guides on adding new channels and new notification types [here](#guides).
 
@@ -178,6 +178,6 @@ Shawn
 ## Improvements
 
 - Add authentication instead of relying on companyId/userId for `/list-ui-notifications`
-- Add pagination for `/list-ui-notifications`
+- Add a `total` count and implement pagination for `/list-ui-notifications`
 - Persist all notifications for idempotency
 - Add more exceptions and improve exception handling
