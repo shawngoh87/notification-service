@@ -3,6 +3,7 @@ import { Connection } from 'mongoose';
 import {
   UI_NOTIFICATION_DOCUMENT,
   UINotificationSchema,
+  UINotificationCollectionName,
 } from './infra/repository/ui-notification.document';
 import { getDatabaseConnectionToken } from '../common/database.providers';
 import { DatabaseModule } from '../common/database.module';
@@ -27,7 +28,10 @@ import { HappyBirthdayNotificationTemplate } from './application/notification-te
     {
       provide: UI_NOTIFICATION_DOCUMENT,
       useFactory: (connection: Connection) => {
-        return connection.model('ui_notification', UINotificationSchema);
+        return connection.model(
+          UINotificationCollectionName,
+          UINotificationSchema,
+        );
       },
       inject: [getDatabaseConnectionToken()],
     },

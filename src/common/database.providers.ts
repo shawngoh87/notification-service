@@ -5,13 +5,14 @@ export const getDatabaseConnectionToken = () => 'DATABASE_CONNECTION';
 export const databaseProviders = [
   {
     provide: getDatabaseConnectionToken(),
-    useFactory: (): Promise<typeof mongoose> => {
+    useFactory: async (): Promise<mongoose.Connection> => {
       const uri = process.env.MONGODB_URI;
       if (!uri) {
         throw new Error('MONGODB_URI is not defined');
       }
 
-      return mongoose.connect(uri);
+      await mongoose.connect(uri);
+      return mongoose.connection;
     },
   },
 ];
