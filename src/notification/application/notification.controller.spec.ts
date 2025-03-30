@@ -4,7 +4,6 @@ import * as request from 'supertest';
 import { NotificationModule } from '../notification.module';
 import { ConfigModule } from '@nestjs/config';
 import { NotificationService } from './notification.service';
-import { Notification } from '../domain/notification.entity';
 import { Server } from 'node:http';
 import { NotificationType } from '../domain/types';
 
@@ -15,16 +14,10 @@ describe('NotificationController', () => {
 
   beforeEach(async () => {
     const mockNotificationService = {
-      sendNotification: jest.fn().mockResolvedValue(
-        new Notification({
-          id: '123',
-          type: NotificationType.LeaveBalanceReminder,
-          data: {
-            subject: 'Test notification',
-            content: 'This is a test notification',
-          },
-        }),
-      ),
+      sendNotification: jest.fn().mockResolvedValue({
+        sent: true,
+        skipReason: null,
+      }),
     };
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -67,9 +60,8 @@ describe('NotificationController', () => {
         .expect(201);
 
       expect(response.body).toEqual({
-        notification: {
-          id: '123',
-        },
+        sent: true,
+        skipReason: null,
       });
 
       expect(notificationService.sendNotification).toHaveBeenCalledWith({

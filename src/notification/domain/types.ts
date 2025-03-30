@@ -18,3 +18,8 @@ export type NotificationChannelType =
 export type ChannelSubscription = {
   [key in NotificationChannelType]: boolean;
 };
+
+export type NotificationContent = {
+  subject?: string;
+  content: string;
+};

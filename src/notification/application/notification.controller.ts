@@ -21,15 +21,15 @@ export class NotificationController {
 
   @Post('send')
   async sendNotification(@Body() body: SendNotificationRequestBody) {
-    const notification = await this.notificationService.sendNotification({
+    const result = await this.notificationService.sendNotification({
       companyId: body.companyId,
       userId: body.userId,
       notificationType: body.notificationType,
     });
+
     return {
-      notification: {
-        id: notification.id,
-      },
+      sent: result.sent,
+      skipReason: result.skipReason,
     };
   }
 }
