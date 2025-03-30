@@ -10,7 +10,9 @@ Types of notification:
 2. Notify a user that the monthly payslip is ready
 3. Wish a user happy birthday
 
-Swagger docs available under `http://host:port/docs`.
+## Important resources
+
+Swagger docs available under `http://host:port/docs` and at the [root](swagger.json) of the repository. Drop `swagger.json` into Postman to import the collection.
 
 Guides on adding new channels and new notification types [here](#guides).
 

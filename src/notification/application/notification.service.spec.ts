@@ -115,7 +115,7 @@ describe('NotificationService', () => {
     });
   });
 
-  describe('listUiNotifications', () => {
+  describe('listUINotifications', () => {
     it('should list ui notifications', async () => {
       const uiNotification = UINotification.create({
         content: 'Leave balance reminder',
@@ -126,7 +126,7 @@ describe('NotificationService', () => {
         uiNotification,
       ]);
 
-      const result = await service.listUiNotifications({
+      const result = await service.listUINotifications({
         companyId: '1',
         userId: '1',
       });

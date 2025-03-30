@@ -1,0 +1,187 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/notification/send": {
+      "post": {
+        "description": "Sends a notification of specified type to the target user",
+        "operationId": "NotificationController_sendNotification",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendNotificationRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Notification sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendNotificationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters"
+          }
+        },
+        "summary": "Send a notification to a user",
+        "tags": [
+          "Notification"
+        ]
+      }
+    },
+    "/api/notification/list-ui-notifications": {
+      "get": {
+        "description": "Returns a list of UI notifications for the specified user",
+        "operationId": "NotificationController_listUINotifications",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "query",
+            "description": "Company ID",
+            "schema": {
+              "example": "company-123",
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "query",
+            "description": "User ID",
+            "schema": {
+              "example": "user-123",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of UI notifications",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UINotification"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters"
+          }
+        },
+        "summary": "List UI notifications for a user",
+        "tags": [
+          "Notification"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Notification Service",
+    "description": "Notification Service API description",
+    "version": "0.0.1",
+    "contact": {}
+  },
+  "tags": [
+    {
+      "name": "notification",
+      "description": ""
+    }
+  ],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "SendNotificationRequestBody": {
+        "type": "object",
+        "properties": {
+          "companyId": {
+            "type": "string",
+            "description": "Company ID of the notification recipient",
+            "example": "company-123"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User ID of the notification recipient",
+            "example": "user-123"
+          },
+          "notificationType": {
+            "type": "string",
+            "description": "Type of notification to send",
+            "enum": [
+              "leave-balance-reminder",
+              "monthly-payslip",
+              "happy-birthday"
+            ],
+            "example": "leave-balance-reminder"
+          }
+        },
+        "required": [
+          "companyId",
+          "userId",
+          "notificationType"
+        ]
+      },
+      "SendNotificationResponse": {
+        "type": "object",
+        "properties": {
+          "sent": {
+            "type": "boolean",
+            "description": "Whether the notification was sent successfully",
+            "example": false
+          },
+          "skipReason": {
+            "type": "object",
+            "description": "Reason why notification was skipped, if applicable",
+            "example": "user_not_found"
+          }
+        },
+        "required": [
+          "sent"
+        ]
+      },
+      "UINotification": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the notification (MongoDB ObjectId)",
+            "example": "507f1f77bcf86cd799439011"
+          },
+          "companyId": {
+            "type": "string",
+            "description": "Company ID associated with the notification",
+            "example": "company-123"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User ID of the notification recipient",
+            "example": "user-123"
+          },
+          "content": {
+            "type": "string",
+            "description": "Content of the notification",
+            "example": "You have 10 days of leave remaining"
+          }
+        },
+        "required": [
+          "id",
+          "companyId",
+          "userId",
+          "content"
+        ]
+      }
+    }
+  }
+}

@@ -6,11 +6,24 @@ import { ConfigModule } from '@nestjs/config';
 import { NotificationService } from './notification.service';
 import { Server } from 'node:http';
 import { NotificationType } from '../domain/types';
+import { UINotification } from '../domain/entity/ui-notification.entity';
 
 describe('NotificationController', () => {
   let app: INestApplication<Server>;
   let notificationService: jest.Mocked<NotificationService>;
   let server: Server;
+
+  const notification1 = UINotification.create({
+    companyId: '123',
+    userId: '456',
+    content: 'content',
+  });
+
+  const notification2 = UINotification.create({
+    companyId: '123',
+    userId: '456',
+    content: 'content',
+  });
 
   beforeEach(async () => {
     const mockNotificationService = {
@@ -18,16 +31,9 @@ describe('NotificationController', () => {
         sent: true,
         skipReason: null,
       }),
-      listUiNotifications: jest.fn().mockResolvedValue([
-        {
-          id: '1',
-          content: 'content',
-        },
-        {
-          id: '2',
-          content: 'content',
-        },
-      ]),
+      listUINotifications: jest
+        .fn()
+        .mockResolvedValue([notification1, notification2]),
     };
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -165,18 +171,24 @@ describe('NotificationController', () => {
         .query({ companyId: '123', userId: '456' })
         .expect(200);
 
-      expect(response.body).toEqual([
-        {
-          id: '1',
-          content: 'content',
-        },
-        {
-          id: '2',
-          content: 'content',
-        },
-      ]);
+      expect(response.body).toEqual({
+        notifications: [
+          {
+            id: notification1.toPlainObject().id,
+            companyId: '123',
+            userId: '456',
+            content: 'content',
+          },
+          {
+            id: notification2.toPlainObject().id,
+            companyId: '123',
+            userId: '456',
+            content: 'content',
+          },
+        ],
+      });
 
-      expect(notificationService.listUiNotifications).toHaveBeenCalledWith({
+      expect(notificationService.listUINotifications).toHaveBeenCalledWith({
         companyId: '123',
         userId: '456',
       });

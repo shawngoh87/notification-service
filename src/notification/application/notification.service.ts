@@ -83,7 +83,7 @@ export class NotificationService {
     };
   }
 
-  async listUiNotifications(params: {
+  async listUINotifications(params: {
     companyId: string;
     userId: string;
   }): Promise<UINotification[]> {

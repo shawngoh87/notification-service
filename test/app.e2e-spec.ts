@@ -7,6 +7,7 @@ import { NotificationType } from './../src/notification/domain/types';
 import { Connection, disconnect } from 'mongoose';
 import { getDatabaseConnectionToken } from '../src/common/database.providers';
 import { ConfigModule } from '@nestjs/config';
+import { ObjectId } from 'bson';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
@@ -147,11 +148,13 @@ describe('AppController (e2e)', () => {
     it('should list ui notifications', async () => {
       await db?.collection('ui_notifications').insertMany([
         {
+          _id: new ObjectId('a'.repeat(24)),
           content: 'Test',
           companyId: '1',
           userId: '1',
         },
         {
+          _id: new ObjectId('b'.repeat(24)),
           content: 'Test 2',
           companyId: '1',
           userId: '1',
@@ -166,13 +169,22 @@ describe('AppController (e2e)', () => {
         })
         .expect(200);
 
-      expect(response.body).toHaveLength(2);
-      expect(response.body).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({ content: 'Test' }),
-          expect.objectContaining({ content: 'Test 2' }),
-        ]),
-      );
+      expect(response.body).toEqual({
+        notifications: [
+          {
+            id: 'a'.repeat(24),
+            companyId: '1',
+            userId: '1',
+            content: 'Test',
+          },
+          {
+            id: 'b'.repeat(24),
+            companyId: '1',
+            userId: '1',
+            content: 'Test 2',
+          },
+        ],
+      });
     });
   });
 });
