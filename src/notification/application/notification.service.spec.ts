@@ -6,16 +6,25 @@ import { IdentityRemoteService } from '../infra/remote-service/identity.remote-s
 import { NotificationTemplateRegistry } from './notification-template/notification-template.registry';
 import { NotificationChannelRegistry } from './notification-channel/notification-channel.registry';
 import { User } from '../domain/entity/user.entity';
+import { UINotificationRepository } from '../infra/repository/ui-notification.repository';
+import { UINotification } from '../domain/entity/ui-notification.entity';
 
 describe('NotificationService', () => {
   let service: NotificationService;
   let mockedIdentityRemoteService: jest.Mocked<IdentityRemoteService>;
+  let mockedUINotificationRepository: jest.Mocked<UINotificationRepository>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [IdentityModule],
       providers: [
         NotificationService,
+        {
+          provide: UINotificationRepository,
+          useValue: {
+            findByUserId: jest.fn(),
+          },
+        },
         {
           provide: NotificationChannelRegistry,
           useFactory: () => {
@@ -71,6 +80,9 @@ describe('NotificationService', () => {
     mockedIdentityRemoteService = module.get<
       jest.Mocked<IdentityRemoteService>
     >(IdentityRemoteService);
+    mockedUINotificationRepository = module.get<
+      jest.Mocked<UINotificationRepository>
+    >(UINotificationRepository);
   });
 
   describe('sendNotification', () => {
@@ -99,6 +111,31 @@ describe('NotificationService', () => {
       expect(result).toEqual({
         sent: false,
         skipReason: 'user_not_found',
+      });
+    });
+  });
+
+  describe('listUiNotifications', () => {
+    it('should list ui notifications', async () => {
+      const uiNotification = UINotification.create({
+        content: 'Leave balance reminder',
+        companyId: '1',
+        userId: '1',
+      });
+      mockedUINotificationRepository.findByUserId.mockResolvedValue([
+        uiNotification,
+      ]);
+
+      const result = await service.listUiNotifications({
+        companyId: '1',
+        userId: '1',
+      });
+
+      expect(result).toEqual([uiNotification]);
+
+      expect(mockedUINotificationRepository.findByUserId).toHaveBeenCalledWith({
+        companyId: '1',
+        userId: '1',
       });
     });
   });

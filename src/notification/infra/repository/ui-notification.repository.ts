@@ -21,4 +21,11 @@ export class UINotificationRepository {
 
     return notification;
   }
+
+  async findByUserId(params: {
+    companyId: string;
+    userId: string;
+  }): Promise<UINotification[]> {
+    return Promise.resolve([]);
+  }
 }

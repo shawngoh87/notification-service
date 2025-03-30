@@ -4,6 +4,14 @@ import { IdentityRemoteService } from '../infra/remote-service/identity.remote-s
 import { NotificationTemplateRegistry } from './notification-template/notification-template.registry';
 import { NotificationChannelRegistry } from './notification-channel/notification-channel.registry';
 import { UINotification } from '../domain/entity/ui-notification.entity';
+import { UINotificationRepository } from '../infra/repository/ui-notification.repository';
+
+class UserNotFoundException extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'UserNotFoundException';
+  }
+}
 
 type SendNotificationResult = {
   sent: boolean;
@@ -16,6 +24,7 @@ export class NotificationService {
     private readonly identityRemoteService: IdentityRemoteService,
     private readonly templateRegistry: NotificationTemplateRegistry,
     private readonly channelRegistry: NotificationChannelRegistry,
+    private readonly uiNotificationRepository: UINotificationRepository,
   ) {}
 
   async sendNotification(params: {
@@ -36,6 +45,7 @@ export class NotificationService {
       };
     }
 
+    // TODO: Use null template so don't have to handle exceptions
     const template = this.templateRegistry.getByNotificationType(
       params.notificationType,
     );
@@ -75,6 +85,22 @@ export class NotificationService {
     companyId: string;
     userId: string;
   }): Promise<UINotification[]> {
-    return await Promise.resolve([]);
+    const user = await this.identityRemoteService.getUser({
+      userId: params.userId,
+      companyId: params.companyId,
+    });
+
+    if (!user) {
+      throw new UserNotFoundException(
+        `User not found for userId: ${params.userId}, companyId: ${params.companyId}`,
+      );
+    }
+
+    const uiNotifications = await this.uiNotificationRepository.findByUserId({
+      companyId: params.companyId,
+      userId: params.userId,
+    });
+
+    return uiNotifications;
   }
 }
