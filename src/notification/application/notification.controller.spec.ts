@@ -101,6 +101,12 @@ describe('NotificationController', () => {
           await expect400(body);
         });
 
+        it('should invalidate non-string companyId', async () => {
+          // @ts-expect-error
+          body.companyId = 123;
+          await expect400(body);
+        });
+
         it('should invalidate empty companyId', async () => {
           body.companyId = '';
           await expect400(body);
@@ -111,6 +117,12 @@ describe('NotificationController', () => {
         it('should invalidate missing userId', async () => {
           // @ts-expect-error
           delete body.userId;
+          await expect400(body);
+        });
+
+        it('should invalidate non-string userId', async () => {
+          // @ts-expect-error
+          body.userId = 123;
           await expect400(body);
         });
 

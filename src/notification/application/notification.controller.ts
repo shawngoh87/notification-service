@@ -1,13 +1,15 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { NotificationService } from './notification.service';
 import { NotificationType } from '../domain/types';
-import { IsNotEmpty, IsEnum } from 'class-validator';
+import { IsNotEmpty, IsEnum, IsString } from 'class-validator';
 
 class SendNotificationRequestBody {
   @IsNotEmpty()
+  @IsString()
   companyId!: string;
 
   @IsNotEmpty()
+  @IsString()
   userId!: string;
 
   @IsNotEmpty()
