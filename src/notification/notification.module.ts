@@ -18,6 +18,7 @@ import { UINotificationRepository } from './infra/repository/ui-notification.rep
 import { UINotificationChannel } from './application/notification-channel/ui';
 import { EmailNotificationChannel } from './application/notification-channel/email';
 import { MonthlyPayslipNotificationTemplate } from './application/notification-template/monthly-payslip';
+import { HappyBirthdayNotificationTemplate } from './application/notification-template/happy-birthday';
 
 @Module({
   imports: [DatabaseModule, IdentityModule],
@@ -62,6 +63,11 @@ import { MonthlyPayslipNotificationTemplate } from './application/notification-t
         registry.register(
           NotificationType.MonthlyPayslip,
           new MonthlyPayslipNotificationTemplate(),
+        );
+
+        registry.register(
+          NotificationType.HappyBirthday,
+          new HappyBirthdayNotificationTemplate(),
         );
 
         return registry;
