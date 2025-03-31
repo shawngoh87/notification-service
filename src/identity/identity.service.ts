@@ -25,6 +25,19 @@ type IdentityUser = {
 
 @Injectable()
 export class IdentityService {
+  /**
+   * User 1 subscribed to email and ui
+   * User 2 subscribed to email only
+   * User 3 subscribed to ui only
+   * User 4 subscribed to email and ui
+   * User 5 subscribed to email and ui
+   *
+   * Company 1 subscribed to email and ui
+   * Company 2 subscribed to email and ui
+   * Company 3 subscribed to email and ui
+   * Company 4 subscribed to email only
+   * Company 5 subscribed to ui only
+   */
   private readonly users: IdentityUser[] = [
     {
       id: '1',
@@ -55,7 +68,7 @@ export class IdentityService {
       },
       channelSubscription: {
         email: true,
-        ui: false,
+        ui: true,
       },
     },
     {
@@ -66,6 +79,38 @@ export class IdentityService {
         name: 'Initech',
         channelSubscription: {
           email: false,
+          ui: true,
+        },
+      },
+      channelSubscription: {
+        email: true,
+        ui: true,
+      },
+    },
+    {
+      id: '4',
+      name: 'Alice Johnson',
+      company: {
+        id: '4',
+        name: 'Wayne Enterprises',
+        channelSubscription: {
+          email: true,
+          ui: true,
+        },
+      },
+      channelSubscription: {
+        email: true,
+        ui: false,
+      },
+    },
+    {
+      id: '5',
+      name: 'Charlie Brown',
+      company: {
+        id: '5',
+        name: 'Stark Industries',
+        channelSubscription: {
+          email: true,
           ui: true,
         },
       },

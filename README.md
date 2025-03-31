@@ -181,3 +181,5 @@ Shawn
 - Add a `total` count and implement pagination for `/list-ui-notifications`
 - Persist all notifications for idempotency
 - Add more exceptions and improve exception handling
+- Improve dynamic type handling for template content
+- Figure out how to move template logic from application to domain

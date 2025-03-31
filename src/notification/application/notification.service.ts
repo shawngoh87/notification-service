@@ -45,7 +45,6 @@ export class NotificationService {
       };
     }
 
-    // TODO: Use null template so don't have to handle exceptions
     const template = this.templateRegistry.getByNotificationType(
       params.notificationType,
     );

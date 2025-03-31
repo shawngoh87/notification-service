@@ -8,11 +8,13 @@ import { NotificationChannelRegistry } from './notification-channel/notification
 import { User } from '../domain/entity/user.entity';
 import { UINotificationRepository } from '../infra/repository/ui-notification.repository';
 import { UINotification } from '../domain/entity/ui-notification.entity';
+import { NotificationChannel } from './notification-channel/notification-channel.interface';
 
 describe('NotificationService', () => {
   let service: NotificationService;
   let mockedIdentityRemoteService: jest.Mocked<IdentityRemoteService>;
   let mockedUINotificationRepository: jest.Mocked<UINotificationRepository>;
+  let mockedChannel: jest.Mocked<NotificationChannel>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -29,9 +31,10 @@ describe('NotificationService', () => {
           provide: NotificationChannelRegistry,
           useFactory: () => {
             const registry = new NotificationChannelRegistry();
-            registry.register(NotificationChannelType.UI, {
+            mockedChannel = {
               send: jest.fn().mockResolvedValue(true),
-            });
+            };
+            registry.register(NotificationChannelType.UI, mockedChannel);
             return registry;
           },
         },
@@ -112,6 +115,35 @@ describe('NotificationService', () => {
         sent: false,
         skipReason: 'user_not_found',
       });
+    });
+
+    it('should skip notification if user is not subscribed to any channels', async () => {
+      mockedIdentityRemoteService.getUser.mockResolvedValue(
+        User.create({
+          id: '1',
+          name: 'John Doe',
+          company: {
+            id: '1',
+            name: 'Acme Corp',
+            channelSubscription: {
+              email: false,
+              ui: false,
+            },
+          },
+          channelSubscription: {
+            email: false,
+            ui: false,
+          },
+        }),
+      );
+
+      await service.sendNotification({
+        companyId: '1',
+        userId: '1',
+        notificationType: NotificationType.LeaveBalanceReminder,
+      });
+
+      expect(mockedChannel.send).not.toHaveBeenCalled();
     });
   });
 

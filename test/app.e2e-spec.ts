@@ -144,6 +144,62 @@ describe('AppController (e2e)', () => {
     });
   });
 
+  describe('sending notifications to subscribed channels only', () => {
+    it('should send a notification to channels subscribed by user', async () => {
+      await request(app.getHttpServer())
+        .post('/api/notification/send')
+        .send({
+          // User 2 is subscribed to email only
+          // Company 2 is subscribed to email and ui
+          companyId: '2',
+          userId: '2',
+          notificationType: NotificationType.HappyBirthday,
+        })
+        .expect(201);
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Subject',
+        'Happy Birthday, Jane Smith',
+      );
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Content',
+        'Globex Industries wishes you a happy birthday, Jane Smith!',
+      );
+
+      const uiNotifications = await connection.db
+        ?.collection('ui_notifications')
+        .find({})
+        .toArray();
+
+      expect(uiNotifications).toHaveLength(0);
+    });
+
+    it('should send a notification to channels subscribed by company', async () => {
+      await request(app.getHttpServer())
+        .post('/api/notification/send')
+        .send({
+          // User 5 is subscribed to email and ui
+          // Company 5 is subscribed to ui only
+          companyId: '5',
+          userId: '5',
+          notificationType: NotificationType.HappyBirthday,
+        })
+        .expect(201);
+
+      expect(consoleSpy).not.toHaveBeenCalled();
+
+      const uiNotifications = await connection.db
+        ?.collection('ui_notifications')
+        .find({})
+        .toArray();
+
+      expect(uiNotifications).toHaveLength(1);
+      expect(uiNotifications?.[0].content).toEqual(
+        'Stark Industries wishes you a happy birthday, Charlie Brown!',
+      );
+    });
+  });
+
   describe('listing ui notifications', () => {
     it('should list ui notifications', async () => {
       await db?.collection('ui_notifications').insertMany([
